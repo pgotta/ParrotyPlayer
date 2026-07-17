@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Launcher foreground. The artwork below is parrot_mark.xml unchanged; the group
+  wrapping it scales the 80x80 drawing into the 66dp safe zone of the 108dp
+  adaptive-icon canvas and centres it. Content spans roughly x 8..72, y 6..72, so
+  0.85 puts it at about 54dp across, inside the safe circle with room to spare.
+
+  Edit parrot_mark.xml and mirror the change here.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <group
+        android:scaleX="0.85"
+        android:scaleY="0.85"
+        android:translateX="20"
+        android:translateY="21">
+
+
+        <!-- open book -->
+        <path android:pathData="M8,60 L40,54 L40,72 L8,68 Z"
+            android:fillColor="#E3D8C4" android:strokeColor="#1F1B16"
+            android:strokeWidth="1.6" android:strokeLineJoin="round" />
+        <path android:pathData="M72,60 L40,54 L40,72 L72,68 Z"
+            android:fillColor="#E3D8C4" android:strokeColor="#1F1B16"
+            android:strokeWidth="1.6" android:strokeLineJoin="round" />
+        <path android:pathData="M40,54 L40,72"
+            android:strokeColor="#1F1B16" android:strokeWidth="1.6" />
+        <path android:pathData="M14,60 L35,56.2"
+            android:strokeColor="#B9AB92" android:strokeWidth="1.2" />
+        <path android:pathData="M14,63.5 L35,59.7"
+            android:strokeColor="#B9AB92" android:strokeWidth="1.2" />
+        <path android:pathData="M45,56.2 L66,60"
+            android:strokeColor="#B9AB92" android:strokeWidth="1.2" />
+        <path android:pathData="M45,59.7 L66,63.5"
+            android:strokeColor="#B9AB92" android:strokeWidth="1.2" />
+
+        <!-- tail -->
+        <path android:pathData="M55,30 Q72,34 70,50 Q64,44 56,42 Z"
+            android:fillColor="#B08642" android:strokeColor="#1F1B16"
+            android:strokeWidth="1.6" android:strokeLineJoin="round" />
+
+        <!-- body -->
+        <path android:pathData="M30,28 Q24,44 34,52 Q46,56 54,46 Q60,36 52,26 Q44,18 30,28 Z"
+            android:fillColor="#8C3B2E" android:strokeColor="#1F1B16"
+            android:strokeWidth="1.6" android:strokeLineJoin="round" />
+
+        <!-- wing -->
+        <path android:pathData="M38,32 Q48,34 50,46 Q42,48 36,42 Q34,36 38,32 Z"
+            android:fillColor="#6E2C22" android:strokeColor="#1F1B16"
+            android:strokeWidth="1.2" android:strokeLineJoin="round" />
+
+        <!-- head (was circle cx=34 cy=24 r=13) -->
+        <path android:pathData="M21,24 a13,13 0 1,0 26,0 a13,13 0 1,0 -26,0"
+            android:fillColor="#8C3B2E" android:strokeColor="#1F1B16"
+            android:strokeWidth="1.6" />
+
+        <!-- face patch (circle cx=31 cy=25 r=7.5) -->
+        <path android:pathData="M23.5,25 a7.5,7.5 0 1,0 15,0 a7.5,7.5 0 1,0 -15,0"
+            android:fillColor="#ECE4D6" android:strokeColor="#1F1B16"
+            android:strokeWidth="1" />
+
+        <!-- eye (circle cx=33 cy=22 r=2.6) -->
+        <path android:pathData="M30.4,22 a2.6,2.6 0 1,0 5.2,0 a2.6,2.6 0 1,0 -5.2,0"
+            android:fillColor="#1F1B16" />
+        <!-- glint (circle cx=33.9 cy=21.2 r=0.8) -->
+        <path android:pathData="M33.1,21.2 a0.8,0.8 0 1,0 1.6,0 a0.8,0.8 0 1,0 -1.6,0"
+            android:fillColor="#ECE4D6" />
+
+        <!-- beak (hooked) -->
+        <path android:pathData="M22,24 Q12,25 18,31 Q22,31 24,28 Q26,30 28,28 Q27,23 22,24 Z"
+            android:fillColor="#B08642" android:strokeColor="#1F1B16"
+            android:strokeWidth="1.4" android:strokeLineJoin="round" />
+
+        <!-- head crest -->
+        <path android:pathData="M40,13 Q44,6 47,12 Q44,12 43,16 Z"
+            android:fillColor="#B08642" android:strokeColor="#1F1B16"
+            android:strokeWidth="1.2" android:strokeLineJoin="round" />
+    </group>
+</vector>

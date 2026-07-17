@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Only used before Compose takes over the window. Keep in step with
+         ParrotyPalette.Bg in ui/theme/Color.kt. -->
+    <color name="parroty_bg">#ECE4D6</color>
+</resources>

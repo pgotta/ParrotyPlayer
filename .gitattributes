@@ -1,0 +1,10 @@
+* text=auto eol=lf
+
+# Windows batch files must keep CRLF or cmd mis-parses them.
+*.bat text eol=crlf
+
+# Never let git rewrite these.
+*.jar binary
+*.ttf binary
+*.png binary
+*.jpg binary

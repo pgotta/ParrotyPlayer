@@ -1,0 +1,21 @@
+# Android Studio / IntelliJ
+*.iml
+.idea/
+.DS_Store
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Gradle
+.gradle/
+build/
+app/build/
+local.properties
+
+# The wrapper jar is deliberately committed. Without it a fresh clone cannot
+# run ./gradlew at all, which is the whole point of the wrapper.
+!gradle/wrapper/gradle-wrapper.jar
+
+# Keystores. Never commit these.
+*.jks
+*.keystore
