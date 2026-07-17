@@ -7,6 +7,17 @@ the `youtube_chapters-….txt` file into a tappable chapter list.
 It is the app version of the `drive-chapters-….html` page, without the copy-paste
 step, and unlike Drive's own web player it keeps playing with the screen off.
 
+<p align="center">
+  <img src="docs/screenshots/01-library.png" alt="Library screen with the Parroty mark, offering Google Drive or This phone as a source" width="24%">
+  <img src="docs/screenshots/02-setup.png" alt="Setup screen offering the mp3 or the mp4 of the same book, with the chapter file auto-detected" width="24%">
+  <img src="docs/screenshots/03-player.png" alt="Player showing a bookmark and a tappable chapter list with timestamps" width="24%">
+  <img src="docs/screenshots/04-subtitles.png" alt="Player with subtitles enabled, showing the video and a live caption" width="24%">
+</p>
+
+<p align="center">
+  <em>Picking a source, choosing the mp3 over the mp4, chapters and bookmarks, subtitles on.</em>
+</p>
+
 ## What it does
 
 - **Two sources.** Browse Drive as a folder tree, or open a file already on the
