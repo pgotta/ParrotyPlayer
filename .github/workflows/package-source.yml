@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - agent/fix-bookmark-resume-persistence
+  pull_request:
+    branches:
+      - main
 
 jobs:
   package:
