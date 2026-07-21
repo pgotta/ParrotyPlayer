@@ -1,0 +1,27 @@
+name: Package ParrotyPlayer source
+
+on:
+  push:
+    branches:
+      - agent/fix-bookmark-resume-persistence
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Create clean source ZIP
+        shell: bash
+        run: |
+          rm -f .github/workflows/package-source.yml
+          zip -r /tmp/ParrotyPlayer-v1.0.1.zip . -x '.git/*'
+
+      - name: Upload source ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: ParrotyPlayer-v1.0.1-source
+          path: /tmp/ParrotyPlayer-v1.0.1.zip
+          if-no-files-found: error
+          retention-days: 7
