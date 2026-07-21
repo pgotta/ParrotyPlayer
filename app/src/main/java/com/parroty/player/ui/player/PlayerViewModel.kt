@@ -22,6 +22,8 @@ import com.parroty.player.data.db.BookEntity
 import com.parroty.player.data.db.BookmarkEntity
 import com.parroty.player.data.drive.DriveApi
 import com.parroty.player.player.PlaybackService
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,6 +31,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 data class PlayerUiState(
@@ -72,7 +75,6 @@ class PlayerViewModel(app: Application) : AndroidViewModel(app) {
     val player: StateFlow<Player?> = _player.asStateFlow()
 
     private var currentFileId: String? = null
-    private var lastSavedMs: Long = 0L
     private var recoveryAttempts = 0
 
     private val listener = object : Player.Listener {
@@ -82,10 +84,9 @@ class PlayerViewModel(app: Application) : AndroidViewModel(app) {
                 recoveryAttempts = 0
                 _state.update { it.copy(error = null) }
             }
-            // Fires for the notification, the lockscreen, a headset button and
-            // audio focus loss, not just the in-app button. Anything that stops
-            // the audio writes the position immediately.
-            if (!isPlaying) saveNow()
+            // PlaybackService owns resume persistence. Keeping a second writer
+            // here could associate the old player's position with a newly opened
+            // book while MediaController was switching media items.
         }
 
         override fun onPlayerError(error: PlaybackException) {
@@ -116,7 +117,6 @@ class PlayerViewModel(app: Application) : AndroidViewModel(app) {
                 )
             }
         }
-
     }
 
     fun start(fileId: String) {
@@ -235,6 +235,7 @@ class PlayerViewModel(app: Application) : AndroidViewModel(app) {
         return builder.build()
     }
 
+    /** UI polling only. PlaybackService performs the durable position writes. */
     private fun trackPosition() {
         viewModelScope.launch {
             while (isActive) {
@@ -248,13 +249,6 @@ class PlayerViewModel(app: Application) : AndroidViewModel(app) {
                             bufferedMs = c.bufferedPosition
                         )
                     }
-                    // Written every few seconds rather than every tick: enough to
-                    // survive a crash, light enough not to hammer the disk.
-                    val fileId = currentFileId
-                    if (fileId != null && duration > 0 && kotlin.math.abs(position - lastSavedMs) > 5_000) {
-                        lastSavedMs = position
-                        repo.savePosition(fileId, position, duration)
-                    }
                 }
                 delay(500)
             }
@@ -266,7 +260,6 @@ class PlayerViewModel(app: Application) : AndroidViewModel(app) {
     fun togglePlay() {
         val c = controller ?: return
         if (c.isPlaying) c.pause() else c.play()
-        saveNow()
     }
 
     fun seekTo(ms: Long) {
@@ -324,14 +317,26 @@ class PlayerViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun addBookmark() {
-        val fileId = currentFileId ?: return
-        val position = _state.value.positionMs
-        val label = _state.value.currentChapter?.title ?: "Bookmark"
-        viewModelScope.launch { repo.addBookmark(fileId, position, label) }
+        val c = controller ?: return
+        val fileId = c.currentMediaItem?.mediaId ?: currentFileId ?: return
+        val position = c.currentPosition.coerceAtLeast(0L)
+        val label = ChapterParser.chapterAt(_state.value.chapters, position)?.title ?: "Bookmark"
+
+        // Start immediately and finish the tiny Room write even if the user taps
+        // Back at once after creating the bookmark.
+        viewModelScope.launch(start = CoroutineStart.UNDISPATCHED) {
+            withContext(NonCancellable) {
+                repo.addBookmark(fileId, position, label)
+            }
+        }
     }
 
     fun deleteBookmark(id: Long) {
-        viewModelScope.launch { repo.deleteBookmark(id) }
+        viewModelScope.launch(start = CoroutineStart.UNDISPATCHED) {
+            withContext(NonCancellable) {
+                repo.deleteBookmark(id)
+            }
+        }
     }
 
     fun downloadForOffline() {
@@ -390,20 +395,11 @@ class PlayerViewModel(app: Application) : AndroidViewModel(app) {
         recover()
     }
 
-    private fun saveNow() {
-        val fileId = currentFileId ?: return
-        val c = controller ?: return
-        val duration = if (c.duration == C.TIME_UNSET) 0L else c.duration
-        if (duration <= 0) return
-        viewModelScope.launch { repo.savePosition(fileId, c.currentPosition, duration) }
-    }
-
     companion object {
         private const val MAX_RECOVERY_ATTEMPTS = 4
     }
 
     override fun onCleared() {
-        saveNow()
         controller?.removeListener(listener)
         controller?.release()
         controller = null
